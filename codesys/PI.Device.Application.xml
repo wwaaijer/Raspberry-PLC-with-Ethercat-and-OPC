@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Symbolconfiguration xmlns="http://www.3s-software.com/schemas/Symbolconfiguration.xsd">
+  <Header>
+    <Version>3.5.6.0</Version>
+    <SymbolConfigObject version="3.5.6.0" />
+    <ProjectInfo name="PI" devicename="Device" appname="Application" />
+  </Header>
+  <TypeList>
+    <TypeSimple name="T_INT" size="2" swapsize="2" typeclass="Int" iecname="INT" />
+    <TypeSimple name="T_BIT_X_0" size="1" swapsize="0" typeclass="Bool" iecname="BIT" bitoffset="0" />
+    <TypeSimple name="T_BIT_X_2" size="1" swapsize="0" typeclass="Bool" iecname="BIT" bitoffset="2" />
+    <TypeSimple name="T_BIT_X_4" size="1" swapsize="0" typeclass="Bool" iecname="BIT" bitoffset="4" />
+    <TypeSimple name="T_BIT_X_6" size="1" swapsize="0" typeclass="Bool" iecname="BIT" bitoffset="6" />
+  </TypeList>
+  <NodeList>
+    <Node name="Application">
+      <Node name="IoConfig_Globals_Mapping">
+        <Node name="AI0" type="T_INT" access="Read" directaddress="%IW2" />
+        <Node name="AI1" type="T_INT" access="Read" directaddress="%IW4" />
+        <Node name="AO0" type="T_INT" access="ReadWrite" directaddress="%QW1" />
+        <Node name="I0" type="T_BIT_X_0" access="Read" directaddress="%IX0.0" />
+        <Node name="I1" type="T_BIT_X_2" access="Read" directaddress="%IX0.2" />
+        <Node name="I2" type="T_BIT_X_4" access="Read" directaddress="%IX0.4" />
+        <Node name="I3" type="T_BIT_X_6" access="Read" directaddress="%IX0.6" />
+        <Node name="Q0" type="T_BIT_X_0" access="ReadWrite" directaddress="%QX0.0" />
+        <Node name="Q1" type="T_BIT_X_2" access="ReadWrite" directaddress="%QX0.2" />
+        <Node name="Q2" type="T_BIT_X_4" access="ReadWrite" directaddress="%QX0.4" />
+        <Node name="Q3" type="T_BIT_X_6" access="ReadWrite" directaddress="%QX0.6" />
+      </Node>
+      <Node name="PLC_PRG">
+        <Node name="OPC_VAL" type="T_INT" access="ReadWrite" />
+      </Node>
+    </Node>
+  </NodeList>
+</Symbolconfiguration>

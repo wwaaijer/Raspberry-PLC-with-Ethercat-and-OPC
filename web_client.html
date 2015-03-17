@@ -1,0 +1,162 @@
+<html>
+    <head>
+        <title>OPC Control Panel</title>
+        <style>
+            .horizontal .block {
+                display: block;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 33%;
+                height: 50%;
+                cursor: pointer;
+            }
+            .horizontal #pot1 {
+                left: 34%;
+            }
+            .horizontal #pot2 {
+                left: 67%;
+            }
+            .horizontal #manual {
+                width: 34%;
+            }
+            .horizontal #range {
+                top: 50%;
+                width: 100%;
+                height: 50%;
+            }
+            .horizontal .bar {
+                background-color: gray;
+                position: absolute;
+                left: 0;
+                width: 100%;
+                z-index: 0;
+            }
+            .horizontal .text {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                font-weight: bold;
+                text-align: center;
+                z-index: 1;
+            }
+            .horizontal #range .bar {
+                height: 100%;
+                top: 0;
+            }
+        </style>
+    </head>
+    <body class="horizontal">
+        <div id="manual" class="block">
+            <div class="bar" style="top: 0;height: 100%;"></div>
+            <div class="text">man</div>
+        </div>
+        <div id="pot1" class="block">
+            <div class="bar" style="top: 20%;height: 80%;"></div>
+            <div class="text">80%</div>
+        </div>
+        <div id="pot2" class="block">
+            <div class="bar" style="top: 35%;height: 65%;"></div>
+            <div class="text">65%</div>
+        </div>
+        <div id="range" class="block">
+            <div class="bar" style="width: 33%;"></div>
+            <div class="text">33%</div>
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            var socket = io();
+            socket.on('update', function(data) {
+                if (data.name == "AI0")
+                    update_pot1(data.value);
+                else if (data.name == "AI1")
+                    update_pot2(data.value);
+                else if (data.name == "MAN")
+                    update_range(data.value);
+                else if (data.name == "web_modus")
+                     update_modus(data.value);
+                
+            });
+
+            elManual = document.getElementById("manual");
+            elManual.bar = elManual.querySelector(".bar");
+            elManual.text = elManual.querySelector(".text");
+            elManual.addEventListener("click", function(e) {
+                socket.emit('man');
+            });
+
+            elPot1 = document.getElementById("pot1");
+            elPot1.bar = elPot1.querySelector(".bar");
+            elPot1.text = elPot1.querySelector(".text");
+            elPot1.addEventListener("click", function(e) {
+                socket.emit('pot1');
+            });
+
+            elPot2 = document.getElementById("pot2");
+            elPot2.bar = elPot2.querySelector(".bar");
+            elPot2.text = elPot2.querySelector(".text");
+            elPot2.addEventListener("click", function(e) {
+                socket.emit('pot2');
+            });
+
+            elRange = document.getElementById("range");
+            elRange.bar = elRange.querySelector(".bar");
+            elRange.text = elRange.querySelector(".text");
+
+            window.addEventListener("resize", ajuistFonts);
+            ajuistFonts();
+
+            elRange.addEventListener("click", function(e) {
+                var p = ((e.x / window.innerWidth) * 100 + 0.5) | 0;
+                socket.emit('update', p);
+            });
+
+
+            function ajuistFonts() {
+                var line = (window.innerHeight / 2),
+                        font = (window.innerHeight / 6);
+
+                elPot1.text.style.lineHeight = line + "px";
+                elPot1.text.style.fontSize = font + "px";
+
+                elPot2.text.style.lineHeight = line + "px";
+                elPot2.text.style.fontSize = font + "px";
+
+                elManual.text.style.lineHeight = line + "px";
+                elManual.text.style.fontSize = font + "px";
+
+                elRange.text.style.lineHeight = line + "px";
+                elRange.text.style.fontSize = font + "px";
+            }
+
+            function update_pot1(value) {
+                elPot1.bar.style.top = (100 - value) + "%";
+                elPot1.bar.style.height = value + "%";
+                elPot1.text.innerHTML = value + "%";
+            }
+            function update_pot2(value) {
+                elPot2.bar.style.top = (100 - value) + "%";
+                elPot2.bar.style.height = value + "%";
+                elPot2.text.innerHTML = value + "%";
+            }
+            function update_range(value){
+                elRange.bar.style.width = elRange.text.innerHTML = value + "%";
+            }
+            function update_modus(value) {
+                Array.prototype.forEach.call(document.body.querySelectorAll(".bar"), function(el) {
+                    el.style.backgroundColor = "gray";
+                });
+                if (value == "AI0")
+                    elPot1.bar.style.backgroundColor = "blue";
+                else if (value == "AI1")
+                    elPot2.bar.style.backgroundColor = "blue";
+                else if (value == "MAN") {
+                    elManual.bar.style.backgroundColor = "blue";
+                    elRange.bar.style.backgroundColor = "blue";
+                }
+            }
+        </script>
+    </body>
+</html>
